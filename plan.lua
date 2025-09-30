@@ -199,7 +199,7 @@ local function queueScript()
 wait(0.2)
 print("Restarting script from queue...")
 pcall(function()
-    loadstring(game:HttpGet("https://github.com/sketchboyroblox/roblox22/blob/main/plan.lua"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/sulwtf/spam/main/plan.lua"))()
 end)
 ]])
     else
@@ -217,6 +217,7 @@ local function saveScriptData()
     pcall(function()
         if writefile then
             writefile("spammer_data.json", HttpService:JSONEncode(data))
+            print("Script data saved - Auto-start: " .. tostring(isRunning))
         end
     end)
 end
@@ -238,10 +239,10 @@ local function loadScriptData()
             joinedServers = data.joinedServers or {}
             failedGames = data.failedGames or {}
             usersProcessed = data.usersProcessed or 0
-            return data.shouldAutoStart or false
+            return data.shouldAutoStart ~= false
         end
     end
-    return false
+    return true
 end
 
 local function waitForStableConnection()
@@ -650,7 +651,7 @@ end
 local function initialize()
     print("Initializing enhanced spammer script...")
     initializeMessageVariations()
-    loadScriptData()
+    local shouldAutoStart = loadScriptData()
     
     UserInputService.InputBegan:Connect(onKeyPress)
     
@@ -658,8 +659,14 @@ local function initialize()
         joinedServers[game.JobId] = tick()
     end
     
-    startSpamming()
+    if shouldAutoStart then
+        print("Auto-starting spam process...")
+        isRunning = true
+        startSpamming()
+    else
+        print("Script loaded but not auto-starting. Press R to manually start.")
+        isRunning = false
+    end
 end
-
 
 initialize()
