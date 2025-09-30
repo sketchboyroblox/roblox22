@@ -18,16 +18,15 @@ local maxUsersPerGame = 3
 local followConnection = nil
 local pingOptimized = false
 local messageVariations = {}
+local autoStartEnabled = true
 
 local function generateMessageVariations(baseMessage)
     local variations = {}
     local substitutions = {
-        ["a"] = {"@", "4", "α"},
         ["e"] = {"3", "€", "ε"},
         ["i"] = {"1", "!", "ι"},
         ["o"] = {"0", "ø", "ο"},
-        ["u"] = {"μ", "υ"},
-        ["s"] = {"$", "5", "σ"},
+        ["u"] = {"μ", "υ"},,
         ["l"] = {"1", "|", "ι"},
         ["t"] = {"7", "†"},
         [" "] = {".", "_", "-"}
@@ -59,7 +58,9 @@ local function initializeMessageVariations()
         "get active /weep",
         "join the new /weep",
         "camgir1s in /weep jvc",
-        "b_yfriend blue for promotion just like this"
+        "shame18 blue for promotion just like this",
+        "BRO WHAT IS SHE DOING ON CAM /weep"
+        "add shame18 if you want $$"
     }
     
     for _, msg in ipairs(baseMessages) do
@@ -196,12 +197,13 @@ local queueteleport = queue_on_teleport or (syn and syn.queue_on_teleport) or (f
 local function queueScript()
     if queueteleport and type(queueteleport) == "function" then
         queueteleport([[
-wait(0.2)
+wait(0.5)
 print("Restarting script from queue...")
 pcall(function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/sulwtf/spam/main/plan.lua"))()
 end)
 ]])
+        print("Script queued for restart")
     else
         print("Queue teleport not available - script will not auto-restart")
     end
@@ -210,19 +212,21 @@ end
 local function saveScriptData()
     local data = {
         joinedServers = joinedServers,
-        shouldAutoStart = isRunning,
+        shouldAutoStart = autoStartEnabled,
         failedGames = failedGames,
-        usersProcessed = usersProcessed
+        usersProcessed = usersProcessed,
+        timestamp = tick()
     }
     pcall(function()
         if writefile then
             writefile("spammer_data.json", HttpService:JSONEncode(data))
-            print("Script data saved - Auto-start: " .. tostring(isRunning))
+            print("Script data saved - Auto-start: " .. tostring(autoStartEnabled))
         end
     end)
 end
 
 local function loadScriptData()
+    print("Loading script data...")
     local success, content = pcall(function()
         if isfile and readfile and isfile("spammer_data.json") then
             return readfile("spammer_data.json")
@@ -239,9 +243,17 @@ local function loadScriptData()
             joinedServers = data.joinedServers or {}
             failedGames = data.failedGames or {}
             usersProcessed = data.usersProcessed or 0
-            return data.shouldAutoStart ~= false
+            
+            if data.shouldAutoStart ~= nil then
+                autoStartEnabled = data.shouldAutoStart
+                print("Loaded auto-start setting: " .. tostring(autoStartEnabled))
+                return autoStartEnabled
+            end
         end
     end
+    
+    print("No save data found, defaulting to auto-start enabled")
+    autoStartEnabled = true
     return true
 end
 
@@ -267,7 +279,7 @@ local function waitForGameLoad()
     
     local attempts = 0
     while (not player.Character or not player.Character:FindFirstChild("Humanoid")) and attempts < 30 do
-        wait(0.05)
+        wait(0.1)
         attempts = attempts + 1
     end
     
@@ -288,10 +300,10 @@ local function waitForGameLoad()
     forceChatFeatures()
     optimizeRendering()
     
-    wait(1)
+    wait(2)
     
     local chatAttempts = 0
-    while chatAttempts < 15 do
+    while chatAttempts < 20 do
         local chatReady = false
         pcall(function()
             if TextChatService.ChatInputBarConfiguration and TextChatService.ChatInputBarConfiguration.TargetTextChannel then
@@ -304,12 +316,12 @@ local function waitForGameLoad()
             break
         end
         
-        wait(0.2)
+        wait(0.3)
         chatAttempts = chatAttempts + 1
     end
     
     print("Game load sequence complete!")
-    wait(0.5)
+    wait(1)
 end
 
 local function cleanupOldServers()
@@ -603,12 +615,16 @@ local function teleportToNewServer()
 end
 
 local function startSpamming()
+    print("Starting spam process - isRunning: " .. tostring(isRunning))
     spawn(function()
         waitForGameLoad()
         
-        if not isRunning then return end
+        if not isRunning then 
+            print("Script stopped during game load")
+            return 
+        end
         
-        print("Starting spam process...")
+        print("Spam process active!")
         local processedInThisGame = 0
         
         while processedInThisGame < maxUsersPerGame and isRunning do
@@ -635,38 +651,57 @@ end
 
 local function stopSpamming()
     isRunning = false
+    autoStartEnabled = false
     stopFollowing()
     saveScriptData()
-    print("Script stopped")
+    print("Script stopped - Auto-start disabled")
 end
 
 local function onKeyPress(key)
     if key.KeyCode == Enum.KeyCode.Q then
         stopSpamming()
     elseif key.KeyCode == Enum.KeyCode.R then
-        teleportToNewServer()
+        if not isRunning then
+            isRunning = true
+            autoStartEnabled = true
+            print("Manually starting script...")
+            startSpamming()
+        else
+            teleportToNewServer()
+        end
     end
 end
 
 local function initialize()
-    print("Initializing enhanced spammer script...")
+    print("=== ENHANCED SPAMMER SCRIPT INITIALIZING ===")
+    print("Game: " .. game.Name .. " | Place ID: " .. game.PlaceId)
+    print("Player: " .. player.Name .. " | User ID: " .. player.UserId)
+    
     initializeMessageVariations()
+    print("Message variations initialized: " .. #messageVariations .. " variations")
+    
     local shouldAutoStart = loadScriptData()
     
     UserInputService.InputBegan:Connect(onKeyPress)
+    print("Key bindings connected (Q = Stop, R = Start/Restart)")
     
     if game.JobId and game.JobId ~= "" then
         joinedServers[game.JobId] = tick()
+        print("Current server registered: " .. game.JobId)
     end
     
     if shouldAutoStart then
-        print("Auto-starting spam process...")
+        print("AUTO-STARTING SPAM PROCESS...")
         isRunning = true
+        autoStartEnabled = true
         startSpamming()
     else
-        print("Script loaded but not auto-starting. Press R to manually start.")
+        print("Script loaded but auto-start disabled. Press R to manually start.")
         isRunning = false
+        autoStartEnabled = false
     end
+    
+    print("=== INITIALIZATION COMPLETE ===")
 end
 
 initialize()
