@@ -22,7 +22,7 @@ local autoStartEnabled = true
 
 local function generateMessageVariations(baseMessage)
     local variations = {}
-    local substitutions = {,
+    local substitutions = {
         ["e"] = {"3", "€", "ε"},
         ["i"] = {"1", "!", "ι"},
         ["o"] = {"0", "ø", "ο"},
