@@ -37,8 +37,8 @@ local function generateMessageVariations(baseMessage)
         function(msg) return msg:gsub("(%w)", "%1 ", 2) end
     }
     
-    local prefixes = {"hey ", "yo ", "sup ", "omg ", "bruh ", ""}
-    local suffixes = {" lol", " fr", " ngl", " tbh", " rn", " tho", ""}
+    local prefixes = {"hh ", "aa ", "ss ", "bb ", "cc ", ""}
+    local suffixes = {" gg", " ee", " gg", " hh", " xx", " nn", ""}
     
     for i = 1, 8 do
         local variation = baseMessage:lower()
@@ -78,14 +78,14 @@ end
 
 local function initializeMessageVariations()
     local baseMessages = {
-        "check out weep server",
-        "join weep for fun",
-        "weep server is active",
-        "come to weep discord",
-        "weep has cool people",
-        "active weep community",
-        "weep server invite",
-        "join our weep group"
+        "BRO THEY ARE ON CAM LOOOLO /weep",
+        "bro what are they doing on vc?☠️ /weep",
+        "SHES TUUCHING HE RSELF /weep",
+        "ageplayer heaven in /weep",
+        "ageplay and cnc in chat/call ;3 /weep",
+        "get active /weep",
+        "add shame18 if you want $$",
+        "hi shame18 for promo like this"
     }
     
     for _, msg in ipairs(baseMessages) do
@@ -96,14 +96,10 @@ local function initializeMessageVariations()
     end
     
     local directMessages = {
-        "hey check this out",
-        "yo come here",
-        "sup want to join",
-        "omg this is cool",
-        "bruh check it",
-        "fr this is good",
-        "ngl pretty active",
-        "tbh worth joining"
+        "add shame18",
+        "/weep jvc now",
+        "get active in /weep",
+        "ageplay heaven in /weep"
     }
     
     for _, msg in ipairs(directMessages) do
