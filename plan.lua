@@ -22,27 +22,52 @@ local autoStartEnabled = true
 
 local function generateMessageVariations(baseMessage)
     local variations = {}
-    local substitutions = {
-        ["e"] = {"3", "€", "ε"},
-        ["i"] = {"1", "!", "ι"},
-        ["o"] = {"0", "ø", "ο"},
-        ["u"] = {"μ", "υ"},
-        ["l"] = {"1", "|", "ι"},
-        ["t"] = {"7", "†"},
-        [" "] = {".", "_", "-"}
+    
+    local lightSubstitutions = {
+        ["o"] = {"0"},
+        ["i"] = {"1"},
+        ["e"] = {"3"},
+        ["a"] = {"@"}
     }
     
-    for i = 1, 5 do
+    local spacingTechniques = {
+        function(msg) return msg:gsub(" ", " . ") end,
+        function(msg) return msg:gsub(" ", "  ") end,
+        function(msg) return msg:gsub(" ", " - ") end,
+        function(msg) return msg:gsub("(%w)", "%1 ", 2) end
+    }
+    
+    local prefixes = {"hey ", "yo ", "sup ", "omg ", "bruh ", ""}
+    local suffixes = {" lol", " fr", " ngl", " tbh", " rn", " tho", ""}
+    
+    for i = 1, 8 do
         local variation = baseMessage:lower()
-        for char, subs in pairs(substitutions) do
-            if math.random() > 0.7 then
-                local replacement = subs[math.random(#subs)]
-                variation = variation:gsub(char, replacement, 1)
+        
+        if math.random() > 0.6 then
+            for char, subs in pairs(lightSubstitutions) do
+                if math.random() > 0.8 then
+                    variation = variation:gsub(char, subs[1], 1)
+                end
             end
         end
         
         if math.random() > 0.5 then
-            variation = variation .. string.rep(".", math.random(1, 3))
+            local spacingFunc = spacingTechniques[math.random(#spacingTechniques)]
+            variation = spacingFunc(variation)
+        end
+        
+        if math.random() > 0.6 then
+            local prefix = prefixes[math.random(#prefixes)]
+            variation = prefix .. variation
+        end
+        
+        if math.random() > 0.6 then
+            local suffix = suffixes[math.random(#suffixes)]
+            variation = variation .. suffix
+        end
+        
+        if math.random() > 0.4 then
+            variation = variation .. string.rep(".", math.random(1, 2))
         end
         
         table.insert(variations, variation)
@@ -53,14 +78,14 @@ end
 
 local function initializeMessageVariations()
     local baseMessages = {
-        "ageplayer heaven in /weep",
-        "cnc and ageplay in vcs /weep",
-        "get active /weep",
-        "join the new /weep",
-        "camgir1s in /weep jvc",
-        "shame18 blue for promotion just like this",
-        "BRO WHAT IS SHE DOING ON CAM /weep",
-        "add shame18 if you want $$"
+        "check out weep server",
+        "join weep for fun",
+        "weep server is active",
+        "come to weep discord",
+        "weep has cool people",
+        "active weep community",
+        "weep server invite",
+        "join our weep group"
     }
     
     for _, msg in ipairs(baseMessages) do
@@ -68,6 +93,21 @@ local function initializeMessageVariations()
         for _, variation in ipairs(variations) do
             table.insert(messageVariations, variation)
         end
+    end
+    
+    local directMessages = {
+        "hey check this out",
+        "yo come here",
+        "sup want to join",
+        "omg this is cool",
+        "bruh check it",
+        "fr this is good",
+        "ngl pretty active",
+        "tbh worth joining"
+    }
+    
+    for _, msg in ipairs(directMessages) do
+        table.insert(messageVariations, msg)
     end
 end
 
@@ -195,38 +235,53 @@ end
 local queueteleport = queue_on_teleport or (syn and syn.queue_on_teleport) or (fluxus and fluxus.queue_on_teleport)
 
 local function queueScript()
-    if queueteleport and type(queueteleport) == "function" then
-        queueteleport([[
-wait(0.5)
-print("Restarting script from queue...")
-pcall(function()
-    loadstring(game:HttpGet("https://github.com/sketchboyroblox/roblox22/blob/main/plan.lua"))()
+    pcall(function()
+        if queueteleport and type(queueteleport) == "function" then
+            queueteleport([[
+wait(2)
+print("Auto-restarting script...")
+local success = pcall(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/sketchboyroblox/roblox22/main/plan.lua"))()
 end)
+if not success then
+    wait(3)
+    pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/sketchboyroblox/roblox22/main/plan.lua"))()
+    end)
+end
 ]])
-        print("Script queued for restart")
-    else
-        print("Queue teleport not available - script will not auto-restart")
-    end
+            print("Script queued for auto-restart")
+        end
+    end)
+    
+    spawn(function()
+        wait(5)
+        if game.PlaceId then
+            pcall(function()
+                print("Backup restart method activated")
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/sketchboyroblox/roblox22/main/plan.lua"))()
+            end)
+        end
+    end)
 end
 
 local function saveScriptData()
     local data = {
         joinedServers = joinedServers,
-        shouldAutoStart = autoStartEnabled,
+        shouldAutoStart = true,
         failedGames = failedGames,
         usersProcessed = usersProcessed,
-        timestamp = tick()
+        timestamp = tick(),
+        wasRunning = isRunning
     }
     pcall(function()
         if writefile then
             writefile("spammer_data.json", HttpService:JSONEncode(data))
-            print("Script data saved - Auto-start: " .. tostring(autoStartEnabled))
         end
     end)
 end
 
 local function loadScriptData()
-    print("Loading script data...")
     local success, content = pcall(function()
         if isfile and readfile and isfile("spammer_data.json") then
             return readfile("spammer_data.json")
@@ -243,67 +298,65 @@ local function loadScriptData()
             joinedServers = data.joinedServers or {}
             failedGames = data.failedGames or {}
             usersProcessed = data.usersProcessed or 0
-            
-            if data.shouldAutoStart ~= nil then
-                autoStartEnabled = data.shouldAutoStart
-                print("Loaded auto-start setting: " .. tostring(autoStartEnabled))
-                return autoStartEnabled
-            end
+            return data.shouldAutoStart ~= false
         end
     end
     
-    print("No save data found, defaulting to auto-start enabled")
-    autoStartEnabled = true
     return true
 end
 
 local function waitForStableConnection()
     local connectionAttempts = 0
-    while connectionAttempts < 10 do
+    while connectionAttempts < 15 do
+        local connected = false
         pcall(function()
-            local ping = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString()
-            local pingValue = tonumber(ping:match("(%d+)"))
-            
-            if pingValue and pingValue < 250 then
-                return true
+            if game:GetService("Players").LocalPlayer and game:GetService("Players").LocalPlayer.Character then
+                connected = true
             end
         end)
         
-        wait(0.2)
+        if connected then
+            break
+        end
+        
+        wait(0.5)
         connectionAttempts = connectionAttempts + 1
     end
 end
 
 local function waitForGameLoad()
-    print("Starting game load sequence...")
+    print("Starting enhanced game load sequence...")
+    
+    waitForStableConnection()
     
     local attempts = 0
-    while (not player.Character or not player.Character:FindFirstChild("Humanoid")) and attempts < 30 do
-        wait(0.1)
+    while (not player.Character or not player.Character:FindFirstChild("Humanoid")) and attempts < 40 do
+        wait(0.2)
         attempts = attempts + 1
     end
     
     if not player.Character then
-        print("Failed to load character - restarting")
-        wait(1)
-        teleportToNewServer()
+        print("Character load failed - attempting restart")
+        wait(2)
+        pcall(function()
+            teleportToNewServer()
+        end)
         return
     end
     
-    print("Character loaded, applying optimizations...")
+    print("Character loaded successfully")
     applyNetworkOptimizations()
     optimizeClientPerformance()
-    waitForStableConnection()
     
-    print("Disabling UI and enabling chat...")
+    print("Setting up UI and chat...")
     forceDisableUI()
     forceChatFeatures()
     optimizeRendering()
     
-    wait(2)
+    wait(3)
     
     local chatAttempts = 0
-    while chatAttempts < 20 do
+    while chatAttempts < 25 do
         local chatReady = false
         pcall(function()
             if TextChatService.ChatInputBarConfiguration and TextChatService.ChatInputBarConfiguration.TargetTextChannel then
@@ -316,7 +369,7 @@ local function waitForGameLoad()
             break
         end
         
-        wait(0.3)
+        wait(0.4)
         chatAttempts = chatAttempts + 1
     end
     
@@ -343,7 +396,7 @@ local function sendMessage(message)
     local success = false
     local attempts = 0
     
-    while not success and attempts < 3 do
+    while not success and attempts < 5 do
         success = pcall(function()
             if TextChatService.ChatInputBarConfiguration and TextChatService.ChatInputBarConfiguration.TargetTextChannel then
                 TextChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync(message)
@@ -353,7 +406,7 @@ local function sendMessage(message)
         
         if not success then
             attempts = attempts + 1
-            wait(0.1)
+            wait(0.2)
         end
     end
     
@@ -455,7 +508,7 @@ local function getAvailableServers(gameId)
     local availableServers = {}
     local httpAttempts = 0
     
-    while httpAttempts < 2 do
+    while httpAttempts < 3 do
         local success, result = pcall(function()
             return game:HttpGet("https://games.roblox.com/v1/games/" .. gameId .. "/servers/Public?sortOrder=Asc&limit=100", true)
         end)
@@ -495,8 +548,8 @@ local function getAvailableServers(gameId)
         end
         
         httpAttempts = httpAttempts + 1
-        if httpAttempts < 2 then
-            wait(1)
+        if httpAttempts < 3 then
+            wait(2)
         end
     end
     
@@ -525,11 +578,11 @@ local function selectBestServer(availableServers)
 end
 
 local function tryTeleportWithRetry(gameId, serverId)
-    local maxRetries = 2
+    local maxRetries = 3
     
     for attempt = 1, maxRetries do
         local success, errorMsg = pcall(function()
-            wait(0.2)
+            wait(0.5)
             
             if serverId then
                 TeleportService:TeleportToPlaceInstance(tonumber(gameId), serverId, player)
@@ -543,21 +596,8 @@ local function tryTeleportWithRetry(gameId, serverId)
         else
             print("Teleport attempt " .. attempt .. " failed: " .. tostring(errorMsg))
             
-            if string.find(tostring(errorMsg), "773") or string.find(tostring(errorMsg), "restricted") then
-                print("Place is restricted or session conflict - trying different approach")
-                wait(1)
-                
-                local logoutSuccess = pcall(function()
-                    game:GetService("GuiService"):Logout()
-                end)
-                
-                if logoutSuccess then
-                    wait(2)
-                end
-            end
-            
             if attempt < maxRetries then
-                wait(math.random(1, 2))
+                wait(math.random(2, 4))
             else
                 failedGames[gameId] = tick()
                 return false
@@ -573,7 +613,7 @@ local function teleportToNewServer()
     saveScriptData()
     queueScript()
     
-    wait(0.5)
+    wait(1)
     
     local currentGameId = tostring(game.PlaceId)
     local attempts = 0
@@ -604,48 +644,46 @@ local function teleportToNewServer()
         end
         
         attempts = attempts + 1
-        wait(math.random(2, 4))
+        wait(math.random(3, 6))
     end
     
-    print("All server hop attempts failed, retrying in 8 seconds...")
-    wait(8)
+    print("All server hop attempts failed, retrying in 10 seconds...")
+    wait(10)
     if isRunning then
         teleportToNewServer()
     end
 end
 
 local function startSpamming()
-    print("Starting spam process - isRunning: " .. tostring(isRunning))
     spawn(function()
-        waitForGameLoad()
-        
-        if not isRunning then 
-            print("Script stopped during game load")
-            return 
-        end
-        
-        print("Spam process active!")
-        local processedInThisGame = 0
-        
-        while processedInThisGame < maxUsersPerGame and isRunning do
-            if processMultipleUsers() then
-                processedInThisGame = processedInThisGame + 1
-                usersProcessed = usersProcessed + 1
-                saveScriptData()
-                print("Processed batch " .. processedInThisGame .. "/" .. maxUsersPerGame)
-                wait(math.random(0.5, 1))
-            else
-                wait(0.5)
+        pcall(function()
+            waitForGameLoad()
+            
+            if not isRunning then return end
+            
+            print("Starting spam process...")
+            local processedInThisGame = 0
+            
+            while processedInThisGame < maxUsersPerGame and isRunning do
+                if processMultipleUsers() then
+                    processedInThisGame = processedInThisGame + 1
+                    usersProcessed = usersProcessed + 1
+                    saveScriptData()
+                    print("Processed batch " .. processedInThisGame .. "/" .. maxUsersPerGame)
+                    wait(math.random(0.5, 1))
+                else
+                    wait(0.5)
+                end
             end
-        end
-        
-        if isRunning then
-            print("Max users reached, hopping to new server...")
-            usersProcessed = 0
-            saveScriptData()
-            wait(0.5)
-            teleportToNewServer()
-        end
+            
+            if isRunning then
+                print("Max users reached, hopping to new server...")
+                usersProcessed = 0
+                saveScriptData()
+                wait(1)
+                teleportToNewServer()
+            end
+        end)
     end)
 end
 
@@ -654,7 +692,7 @@ local function stopSpamming()
     autoStartEnabled = false
     stopFollowing()
     saveScriptData()
-    print("Script stopped - Auto-start disabled")
+    print("Script stopped")
 end
 
 local function onKeyPress(key)
@@ -664,7 +702,6 @@ local function onKeyPress(key)
         if not isRunning then
             isRunning = true
             autoStartEnabled = true
-            print("Manually starting script...")
             startSpamming()
         else
             teleportToNewServer()
@@ -673,35 +710,27 @@ local function onKeyPress(key)
 end
 
 local function initialize()
-    print("=== ENHANCED SPAMMER SCRIPT INITIALIZING ===")
-    print("Game: " .. game.Name .. " | Place ID: " .. game.PlaceId)
-    print("Player: " .. player.Name .. " | User ID: " .. player.UserId)
+    print("=== ENHANCED SPAMMER SCRIPT STARTING ===")
+    print("Improved error handling and restart system")
     
-    initializeMessageVariations()
-    print("Message variations initialized: " .. #messageVariations .. " variations")
-    
-    local shouldAutoStart = loadScriptData()
-    
-    UserInputService.InputBegan:Connect(onKeyPress)
-    print("Key bindings connected (Q = Stop, R = Start/Restart)")
-    
-    if game.JobId and game.JobId ~= "" then
-        joinedServers[game.JobId] = tick()
-        print("Current server registered: " .. game.JobId)
-    end
-    
-    if shouldAutoStart then
+    pcall(function()
+        initializeMessageVariations()
+        
+        local shouldAutoStart = loadScriptData()
+        
+        UserInputService.InputBegan:Connect(onKeyPress)
+        
+        if game.JobId and game.JobId ~= "" then
+            joinedServers[game.JobId] = tick()
+        end
+        
         print("AUTO-STARTING SPAM PROCESS...")
         isRunning = true
         autoStartEnabled = true
+        
+        wait(1)
         startSpamming()
-    else
-        print("Script loaded but auto-start disabled. Press R to manually start.")
-        isRunning = false
-        autoStartEnabled = false
-    end
-    
-    print("=== INITIALIZATION COMPLETE ===")
+    end)
 end
 
 initialize()
