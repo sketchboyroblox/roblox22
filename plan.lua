@@ -22,11 +22,11 @@ local autoStartEnabled = true
 
 local function generateMessageVariations(baseMessage)
     local variations = {}
-    local substitutions = {
+    local substitutions = {,
         ["e"] = {"3", "€", "ε"},
         ["i"] = {"1", "!", "ι"},
         ["o"] = {"0", "ø", "ο"},
-        ["u"] = {"μ", "υ"},,
+        ["u"] = {"μ", "υ"},
         ["l"] = {"1", "|", "ι"},
         ["t"] = {"7", "†"},
         [" "] = {".", "_", "-"}
@@ -59,7 +59,7 @@ local function initializeMessageVariations()
         "join the new /weep",
         "camgir1s in /weep jvc",
         "shame18 blue for promotion just like this",
-        "BRO WHAT IS SHE DOING ON CAM /weep"
+        "BRO WHAT IS SHE DOING ON CAM /weep",
         "add shame18 if you want $$"
     }
     
