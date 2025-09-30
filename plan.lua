@@ -199,7 +199,7 @@ local function queueScript()
 wait(0.2)
 print("Restarting script from queue...")
 pcall(function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/sulwtf/spam/main/plan.lua"))()
+    loadstring(game:HttpGet("https://github.com/sketchboyroblox/roblox22/blob/main/plan.lua"))()
 end)
 ]])
     else
@@ -660,5 +660,6 @@ local function initialize()
     
     startSpamming()
 end
+
 
 initialize()
