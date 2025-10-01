@@ -20,54 +20,80 @@ local pingOptimized = false
 local messageVariations = {}
 local autoStartEnabled = true
 
-local function generateMessageVariations(baseMessage)
+local function generateAdvancedMessageVariations(baseMessage)
     local variations = {}
     
-    local lightSubstitutions = {
-        ["o"] = {"0"},
-        ["i"] = {"1"},
-        ["e"] = {"3"},
-        ["a"] = {"@"}
+    local unicodeSubstitutions = {
+        ["a"] = {"а", "α", "ᴀ", "𝐚", "𝒶", "𝓪", "𝔞", "𝖺", "𝗮", "𝘢", "𝙖"},
+        ["e"] = {"е", "ε", "𝐞", "𝒆", "𝓮", "𝔢", "𝖾", "𝗲", "𝘦", "𝙚"},
+        ["o"] = {"о", "ο", "𝐨", "𝒐", "𝓸", "𝔬", "𝖔", "𝗼", "𝘰", "𝙤"},
+        ["i"] = {"і", "ι", "𝐢", "𝒊", "𝓲", "𝔦", "𝖎", "𝗶", "𝘪", "𝙞"},
+        ["u"] = {"υ", "𝐮", "𝒖", "𝓾", "𝔲", "𝖚", "𝘂", "𝘶", "𝙪"},
+        ["c"] = {"с", "𝐜", "𝒄", "𝓬", "𝔠", "𝖈", "𝗰", "𝘤", "𝙘"},
+        ["p"] = {"р", "𝐩", "𝒑", "𝓹", "𝔭", "𝖕", "𝗽", "𝘱", "𝙥"},
+        ["x"] = {"х", "𝐱", "𝒙", "𝓍", "𝔵", "𝖝", "𝘅", "𝘹", "𝙭"},
+        ["y"] = {"у", "𝐲", "𝒚", "𝓎", "𝔶", "𝖞", "𝘆", "𝘺", "𝙮"},
+        [" "] = {"  ", " . ", " - ", " _ ", " | ", " · "}
     }
     
     local spacingTechniques = {
         function(msg) return msg:gsub(" ", " . ") end,
         function(msg) return msg:gsub(" ", "  ") end,
         function(msg) return msg:gsub(" ", " - ") end,
-        function(msg) return msg:gsub("(%w)", "%1 ", 2) end
+        function(msg) return msg:gsub(" ", " _ ") end,
+        function(msg) return msg:gsub(" ", " | ") end,
+        function(msg) return msg:gsub(" ", " · ") end,
+        function(msg) return msg:gsub("(%w)", "%1 ", 2) end,
+        function(msg) return msg:gsub("(%w)", "%1.", 2) end
     }
     
-    local prefixes = {"hh ", "aa ", "ss ", "bb ", "cc ", ""}
-    local suffixes = {" gg", " ee", " gg", " hh", " xx", " nn", ""}
+    local prefixes = {"hh ", "aa ", "ss ", "bb ", "cc ", "dd ", "ee ", "ff ", "gg ", ""}
+    local suffixes = {" gg", " ee", " hh", " xx", " nn", " mm", " ll", " kk", " jj", ""}
     
-    for i = 1, 8 do
+    local obfuscationTechniques = {
+        function(msg) return msg:gsub("(%w)", "%1" .. string.char(math.random(8203, 8205)), 2) end,
+        function(msg) return msg:gsub("(%w)", "%1" .. string.char(8204), 2) end,
+        function(msg) return msg:gsub("(%w)", "%1" .. string.char(8205), 2) end
+    }
+    
+    for i = 1, 12 do
         local variation = baseMessage:lower()
         
-        if math.random() > 0.6 then
-            for char, subs in pairs(lightSubstitutions) do
-                if math.random() > 0.8 then
-                    variation = variation:gsub(char, subs[1], 1)
+        if math.random() > 0.4 then
+            for char, subs in pairs(unicodeSubstitutions) do
+                if math.random() > 0.7 then
+                    local sub = subs[math.random(#subs)]
+                    variation = variation:gsub(char, sub, math.random(1, 2))
                 end
             end
         end
         
-        if math.random() > 0.5 then
+        if math.random() > 0.3 then
             local spacingFunc = spacingTechniques[math.random(#spacingTechniques)]
             variation = spacingFunc(variation)
         end
         
-        if math.random() > 0.6 then
+        if math.random() > 0.5 then
             local prefix = prefixes[math.random(#prefixes)]
             variation = prefix .. variation
         end
         
-        if math.random() > 0.6 then
+        if math.random() > 0.5 then
             local suffix = suffixes[math.random(#suffixes)]
             variation = variation .. suffix
         end
         
+        if math.random() > 0.3 then
+            local obfuscationFunc = obfuscationTechniques[math.random(#obfuscationTechniques)]
+            variation = obfuscationFunc(variation)
+        end
+        
+        if math.random() > 0.2 then
+            variation = variation .. string.rep(".", math.random(1, 3))
+        end
+        
         if math.random() > 0.4 then
-            variation = variation .. string.rep(".", math.random(1, 2))
+            variation = variation .. " " .. string.char(math.random(8203, 8205))
         end
         
         table.insert(variations, variation)
@@ -76,10 +102,10 @@ local function generateMessageVariations(baseMessage)
     return variations
 end
 
-local function initializeMessageVariations()
-    local baseMessages = {
+local function createStealthMessages()
+    local stealthMessages = {
         "BRO THEY ARE ON CAM LOOOLO /weep",
-        "bro what are they doing on vc?☠️ /weep",
+        "bro what are they doing on vc?☠️ /weep", 
         "SHES TUUCHING HE RSELF /weep",
         "ageplayer heaven in /weep",
         "ageplay and cnc in chat/call ;3 /weep",
@@ -88,23 +114,55 @@ local function initializeMessageVariations()
         "hi shame18 for promo like this"
     }
     
-    for _, msg in ipairs(baseMessages) do
-        local variations = generateMessageVariations(msg)
+    local stealthVariations = {}
+    for _, msg in ipairs(stealthMessages) do
+        local variations = generateAdvancedMessageVariations(msg)
         for _, variation in ipairs(variations) do
-            table.insert(messageVariations, variation)
+            table.insert(stealthVariations, variation)
         end
     end
     
-    local directMessages = {
-        "add shame18",
-        "/weep jvc now",
-        "get active in /weep",
-        "ageplay heaven in /weep"
-    }
+    return stealthVariations
+end
+
+local function sendStealthMessage(message)
+    local success = false
+    local attempts = 0
     
-    for _, msg in ipairs(directMessages) do
-        table.insert(messageVariations, msg)
+    while not success and attempts < 3 do
+        success = pcall(function()
+            if TextChatService.ChatInputBarConfiguration and TextChatService.ChatInputBarConfiguration.TargetTextChannel then
+                local stealthMessage = message
+                
+                if math.random() > 0.5 then
+                    stealthMessage = stealthMessage .. string.char(math.random(8203, 8205))
+                end
+                
+                TextChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync(stealthMessage)
+                return true
+            end
+        end)
+        
+        if not success then
+            attempts = attempts + 1
+            wait(math.random(0.1, 0.3))
+        end
     end
+    
+    return success
+end
+
+local function getRandomStealthMessages()
+    local selectedMessages = {}
+    
+    for i = 1, 2 do
+        if #messageVariations > 0 then
+            local randomIndex = math.random(1, #messageVariations)
+            table.insert(selectedMessages, messageVariations[randomIndex])
+        end
+    end
+    
+    return selectedMessages
 end
 
 local function applyNetworkOptimizations()
@@ -480,23 +538,23 @@ local function processMultipleUsers()
     for _, targetPlayer in ipairs(targetPlayers) do
         spawn(function()
             if instantTeleportToPlayer(targetPlayer) then
-                wait(0.1)
+                wait(math.random(0.1, 0.3))
                 
-                local selectedMessages = getRandomMessages()
+                local selectedMessages = getRandomStealthMessages()
                 for i, message in ipairs(selectedMessages) do
                     if not isRunning then break end
-                    local sent = sendMessage(message)
+                    local sent = sendStealthMessage(message)
                     if sent then
-                        print("Sent to " .. targetPlayer.Name .. ": " .. message)
+                        print("Sent stealth message to " .. targetPlayer.Name .. ": " .. message)
                     end
-                    wait(math.random(0.3, 0.6))
+                    wait(math.random(0.4, 0.8))
                 end
             end
         end)
-        wait(0.05)
+        wait(math.random(0.05, 0.15))
     end
     
-    wait(2)
+    wait(math.random(1.5, 3))
     return true
 end
 
@@ -705,8 +763,29 @@ local function onKeyPress(key)
     end
 end
 
+local function initializeMessageVariations()
+    messageVariations = createStealthMessages()
+    
+    local directMessages = {
+        "add shame18",
+        "BRO WHAT IS SHE DOING ON CAM? ☠️ /weep", 
+        "SHES AGEPLAYING IN VC /weep",
+        "ageplayer heaven in /weep",
+        "cnc in vc rn /weep",
+        "get active in /weep",
+        "add shame18 for a present:)",
+        "shame18 for roles or promos like this"
+    }
+    
+    for _, msg in ipairs(directMessages) do
+        local variations = generateAdvancedMessageVariations(msg)
+        for _, variation in ipairs(variations) do
+            table.insert(messageVariations, variation)
+        end
+    end
+end
+
 local function initialize()
-    print("=== ENHANCED SPAMMER SCRIPT STARTING ===")
     print("Improved error handling and restart system")
     
     pcall(function()
