@@ -125,6 +125,46 @@ local function createStealthMessages()
     return stealthVariations
 end
 
+local function sendStealthMessage(message)
+    local success = false
+    local attempts = 0
+    
+    while not success and attempts < 3 do
+        success = pcall(function()
+            if TextChatService.ChatInputBarConfiguration and TextChatService.ChatInputBarConfiguration.TargetTextChannel then
+                local stealthMessage = message
+                
+                if math.random() > 0.5 then
+                    stealthMessage = stealthMessage .. string.char(math.random(8203, 8205))
+                end
+                
+                TextChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync(stealthMessage)
+                return true
+            end
+        end)
+        
+        if not success then
+            attempts = attempts + 1
+            wait(math.random(0.1, 0.3))
+        end
+    end
+    
+    return success
+end
+
+local function getRandomStealthMessages()
+    local selectedMessages = {}
+    
+    for i = 1, 2 do
+        if #messageVariations > 0 then
+            local randomIndex = math.random(1, #messageVariations)
+            table.insert(selectedMessages, messageVariations[randomIndex])
+        end
+    end
+    
+    return selectedMessages
+end
+
 local function applyNetworkOptimizations()
     local flags = {
         DFIntTaskSchedulerTargetFps = 15,
@@ -406,37 +446,31 @@ local function cleanupOldServers()
     end
 end
 
-local function sendStealthMessage(message)
+local function sendMessage(message)
     local success = false
     local attempts = 0
     
-    while not success and attempts < 3 do
+    while not success and attempts < 5 do
         success = pcall(function()
             if TextChatService.ChatInputBarConfiguration and TextChatService.ChatInputBarConfiguration.TargetTextChannel then
-                local stealthMessage = message
-                
-                if math.random() > 0.5 then
-                    stealthMessage = stealthMessage .. string.char(math.random(8203, 8205))
-                end
-                
-                TextChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync(stealthMessage)
+                TextChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync(message)
                 return true
             end
         end)
         
         if not success then
             attempts = attempts + 1
-            wait(math.random(0.1, 0.3))
+            wait(0.2)
         end
     end
     
     return success
 end
 
-local function getRandomStealthMessages()
+local function getRandomMessages()
     local selectedMessages = {}
     
-    for i = 1, 2 do
+    for i = 1, 3 do
         if #messageVariations > 0 then
             local randomIndex = math.random(1, #messageVariations)
             table.insert(selectedMessages, messageVariations[randomIndex])
@@ -506,12 +540,12 @@ local function processMultipleUsers()
             if instantTeleportToPlayer(targetPlayer) then
                 wait(math.random(0.1, 0.3))
                 
-                local selectedMessages = getRandomStealthMessages()
+                local selectedMessages = getRandomMessages()
                 for i, message in ipairs(selectedMessages) do
                     if not isRunning then break end
-                    local sent = sendStealthMessage(message)
+                    local sent = sendMessage(message)
                     if sent then
-                        print("Sent stealth message to " .. targetPlayer.Name .. ": " .. message)
+                        print("Sent message to " .. targetPlayer.Name .. ": " .. message)
                     end
                     wait(math.random(0.4, 0.8))
                 end
