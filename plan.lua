@@ -83,12 +83,12 @@ end
 
 local function initializeMessageVariations()
     local baseMessages = {
-        "ageplayer heaven in /mhm",
-        "cnc and ageplay >.< /mhm",
-        "her little parts rout lol /mhm",
-        "cnc in vc rn :p /mhm",
-        "get active /mhm",
-        "jvc shes playing with her cun /mhm"
+        "ageplayer heaven in /lover",
+        "cnc and ageplay >.< /lover",
+        "her little parts rout lol /lover",
+        "cnc in vc rn :p /lover",
+        "get active /lover",
+        "jvc shes playing with her cun /lover"
     }
     
     messageVariations = {}
@@ -104,8 +104,8 @@ local function initializeMessageVariations()
         "add shame18 for a present:)",
         "add shame18 for promos like this",
         "add shame18 blue",
-        "dm shame18 for roles in /mhm",
-        "your all harmless /mhm"
+        "dm shame18 for roles in /lover",
+        "your all harmless /lover"
     }
     
     for _, msg in ipairs(directMessages) do
@@ -744,6 +744,7 @@ local function initialize()
 end
 
 initialize()
+
 
 
 
