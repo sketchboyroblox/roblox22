@@ -105,7 +105,9 @@ local function initializeMessageVariations()
         "add shame18 for promos like this",
         "add shame18 blue",
         "dm shame18 for roles in /arthur",
-        "your all harmless /arthur"
+        "your all harmless /arthur",
+        "hiifur cute dm me",
+        "shame18 ifur hot"
     }
     
     for _, msg in ipairs(directMessages) do
@@ -744,6 +746,7 @@ local function initialize()
 end
 
 initialize()
+
 
 
 
