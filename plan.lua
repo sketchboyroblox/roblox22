@@ -27,7 +27,7 @@ local function generateAdvancedMessageVariations(baseMessage)
         ["a"] = {"а", "α"},
         ["e"] = {"е"},
         ["o"] = {"о", "ο"},
-        ["i"] = {""ι"},
+        ["i"] = {"ι"},
         ["u"] = {"υ"},
         ["c"] = {"с"},
         ["p"] = {"р"},
@@ -748,6 +748,7 @@ local function initialize()
 end
 
 initialize()
+
 
 
 
