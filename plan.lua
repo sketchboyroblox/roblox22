@@ -24,10 +24,10 @@ local function generateAdvancedMessageVariations(baseMessage)
     local variations = {}
     
     local unicodeSubstitutions = {
-        ["a"] = {"а", "α", "ᴀ"},
-        ["e"] = {"е", "ε"},
+        ["a"] = {"а", "α"},
+        ["e"] = {"е"},
         ["o"] = {"о", "ο"},
-        ["i"] = {"і", "ι"},
+        ["i"] = {""ι"},
         ["u"] = {"υ"},
         ["c"] = {"с"},
         ["p"] = {"р"},
@@ -746,6 +746,7 @@ local function initialize()
 end
 
 initialize()
+
 
 
 
