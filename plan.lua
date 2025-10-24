@@ -83,12 +83,14 @@ end
 
 local function initializeMessageVariations()
     local baseMessages = {
-        "ageplayer heaven in /mhm",
-        "cnc and ageplay >.< /mhm",
-        "her little parts rout lol /mhm",
-        "cnc in vc rn :p /mhm",
-        "get active /mhm",
-        "jvc shes playing with her cun /mhm"
+        "ageplayer heaven in /label",
+        "cnc and ageplay in vc /label",
+        "find your little girl /label",
+        "rich dadas in /label",
+        "tight pinkcat in /label",
+        "ageplayers are in /label >.<",
+        "#1 com /label"
+        
     }
     
     messageVariations = {}
@@ -746,6 +748,7 @@ local function initialize()
 end
 
 initialize()
+
 
 
 
