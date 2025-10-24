@@ -106,8 +106,8 @@ local function initializeMessageVariations()
         "add shame18 for a present:)",
         "add shame18 for promos like this",
         "add shame18 blue",
-        "dm shame18 for roles in /mhm",
-        "your all harmless /mhm",
+        "dm shame18 for roles in /label",
+        "your all harmless /label",
         "hiifur cute dm me",
         "shame18 ifur hot"
     }
@@ -748,6 +748,7 @@ local function initialize()
 end
 
 initialize()
+
 
 
 
