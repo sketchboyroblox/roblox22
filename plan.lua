@@ -33,6 +33,8 @@ local function generateAdvancedMessageVariations(baseMessage)
         ["p"] = {"р"},
         ["x"] = {"х"},
         ["y"] = {"у"}
+        ["u"] = {"Ų", "⋃̇"},
+        ["/"] = {"／", "╱"}
     }
     
     local spacingTechniques = {
@@ -42,8 +44,8 @@ local function generateAdvancedMessageVariations(baseMessage)
         function(msg) return msg:gsub("(%w)", "%1 ", 2) end
     }
     
-    local prefixes = {"hh ", "aa ", "ss ", "bb ", ""}
-    local suffixes = {" gg", " ee", " hh", " xx", ""}
+    local prefixes = {"Aw34f ", "Bsdf4g ", "asd233 ", "dfgbfd ", ""}
+    local suffixes = {" gg", " h", " g", " #d", ""}
     
     for i = 1, 8 do
         local variation = baseMessage:lower()
@@ -83,13 +85,13 @@ end
 
 local function initializeMessageVariations()
     local baseMessages = {
-        "ageplayer heaven in /label",
-        "cnc and ageplay in vc /label",
-        "find your little girl /label",
-        "rich dadas in /label",
-        "tight pinkcat in /label",
-        "ageplayers are in /label >.<",
-        "#1 com /label"
+        "ageplayer heaven in /gun",
+        "cnc and ageplay in vc /gun",
+        "find your little girl /gun",
+        "rich dadas in /gun",
+        "tight pinkcat in /gun",
+        "ageplayers are in /gun >.<",
+        "#1 com /gun"
         
     }
     
@@ -103,13 +105,13 @@ local function initializeMessageVariations()
     end
     
     local directMessages = {
-        "add shame18 for a present:)",
-        "add shame18 for promos like this",
-        "add shame18 blue",
-        "dm shame18 for roles in /label",
-        "your all harmless /label",
+        "add oh89 for a present:)",
+        "add oh89 for promos like this",
+        "add oh89 blue",
+        "dm oh89 for roles in /gun",
+        "your all harmless /gun",
         "hiifur cute dm me",
-        "shame18 ifur hot"
+        "oh89 ifu hvae pinkcat >,,<"
     }
     
     for _, msg in ipairs(directMessages) do
@@ -748,3 +750,4 @@ local function initialize()
 end
 
 initialize()
+
