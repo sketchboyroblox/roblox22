@@ -91,12 +91,7 @@ local function initializeMessageVariations()
         "rich dadas in /gun",
         "tight pinkcat in /gun",
         "ageplayers are in /gun >.<",
-        "#1 com /gun",
-        "ageplayers add ha30",
-        "pawsocks dm ha30",
-        "add ha30 bleh",
-        "ha30 has your robux",
-        "ha30 has your nitro"
+        "#1 com /gun"
         
     }
     
@@ -115,7 +110,7 @@ local function initializeMessageVariations()
         "add ha30 blue",
         "dm ha30 for roles in /gun",
         "your all harmless /gun",
-        "hiifur cute dm me",
+        "ha30 has your nitro",
         "ha30 ifu hvae pinkcat >,,<"
     }
     
