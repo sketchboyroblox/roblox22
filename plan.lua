@@ -95,8 +95,7 @@ local function initializeMessageVariations()
         "ha30 said he'll give you robux;)",
         "ha30 is giving out nitro",
         "add ha30 on dc bleh",
-        "girls with pawsocks dm ha30"
-        
+        "girls with pawsocks dm ha30"        
     }
     
     messageVariations = {}
@@ -759,5 +758,6 @@ local function initialize()
 end
 
 initialize()
+
 
 
