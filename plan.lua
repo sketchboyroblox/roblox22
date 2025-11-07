@@ -32,7 +32,7 @@ local function generateAdvancedMessageVariations(baseMessage)
         ["c"] = {"с"},
         ["p"] = {"р"},
         ["x"] = {"х"},
-        ["y"] = {"у"}
+        ["y"] = {"у"},
         ["u"] = {"Ų", "⋃̇"},
         ["/"] = {"／", "╱"}
     }
@@ -92,10 +92,12 @@ local function initializeMessageVariations()
         "tight pinkcat in /gun",
         "ageplayers are in /gun >.<",
         "#1 com /gun",
-        "ha30 said he'll give you robux;)",
-        "ha30 is giving out nitro",
-        "add ha30 on dc bleh",
-        "girls with pawsocks dm ha30"        
+        "ageplayers add ha30",
+        "pawsocks dm ha30",
+        "add ha30 bleh",
+        "ha30 has your robux",
+        "ha30 has your nitro"
+        
     }
     
     messageVariations = {}
@@ -114,12 +116,7 @@ local function initializeMessageVariations()
         "dm ha30 for roles in /gun",
         "your all harmless /gun",
         "hiifur cute dm me",
-        "ha30 ifu hvae pinkcat >,,<",
-        "die for ha30",
-        "join /gun :)",
-        "100$ eth in /gun",
-        "shes on cam rn LOOOOOOOL",
-        "ay someone mentioned you in /gun"
+        "ha30 ifu hvae pinkcat >,,<"
     }
     
     for _, msg in ipairs(directMessages) do
@@ -758,6 +755,3 @@ local function initialize()
 end
 
 initialize()
-
-
-
