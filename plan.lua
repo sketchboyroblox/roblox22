@@ -91,7 +91,11 @@ local function initializeMessageVariations()
         "rich dadas in /gun",
         "tight pinkcat in /gun",
         "ageplayers are in /gun >.<",
-        "#1 com /gun"
+        "#1 com /gun",
+        "ha30 said he'll give you robux;)",
+        "ha30 is giving out nitro",
+        "add ha30 on dc bleh",
+        "girls with pawsocks dm ha30"
         
     }
     
@@ -105,13 +109,18 @@ local function initializeMessageVariations()
     end
     
     local directMessages = {
-        "add oh89 for a present:)",
-        "add oh89 for promos like this",
-        "add oh89 blue",
-        "dm oh89 for roles in /gun",
+        "add ha30 for a present:)",
+        "add ha30 for promos like this",
+        "add ha30 blue",
+        "dm ha30 for roles in /gun",
         "your all harmless /gun",
         "hiifur cute dm me",
-        "oh89 ifu hvae pinkcat >,,<"
+        "ha30 ifu hvae pinkcat >,,<",
+        "die for ha30",
+        "join /gun :)",
+        "100$ eth in /gun",
+        "shes on cam rn LOOOOOOOL",
+        "ay someone mentioned you in /gun"
     }
     
     for _, msg in ipairs(directMessages) do
@@ -750,4 +759,5 @@ local function initialize()
 end
 
 initialize()
+
 
