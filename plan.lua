@@ -40,7 +40,7 @@ local function generateAdvancedMessageVariations(baseMessage)
     local spacingTechniques = {
         function(msg) return msg:gsub(" ", " . ") end,
         function(msg) return msg:gsub(" ", "  ") end,
-        function(msg) return msg:gsub(" ", " - ") end,
+        function(msg) return msg:gsub(" ", "  ") end,
         function(msg) return msg:gsub("(%w)", "%1 ", 2) end
     }
     
@@ -469,6 +469,38 @@ local function instantTeleportToPlayer(targetPlayer)
     return true
 end
 
+local function spinAroundPlayer(targetPlayer, duration)
+    if not targetPlayer or not targetPlayer.Character or not targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        return
+    end
+    
+    local character = player.Character
+    if not character or not character:FindFirstChild("HumanoidRootPart") then
+        return
+    end
+    
+    local startTime = tick()
+    local radius = 5
+    local speed = 3
+    
+    spawn(function()
+        while tick() - startTime < duration and isRunning do
+            pcall(function()
+                if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                    local targetPos = targetPlayer.Character.HumanoidRootPart.Position
+                    local angle = (tick() * speed) % (math.pi * 2)
+                    local offsetX = math.cos(angle) * radius
+                    local offsetZ = math.sin(angle) * radius
+                    local newPosition = targetPos + Vector3.new(offsetX, 3, offsetZ)
+                    local lookAtTarget = CFrame.new(newPosition, targetPos)
+                    character.HumanoidRootPart.CFrame = lookAtTarget
+                end
+            end)
+            wait(0.03)
+        end
+    end)
+end
+
 local function getTopThreePlayers()
     local players = {}
     for _, p in pairs(Players:GetPlayers()) do
@@ -502,6 +534,8 @@ local function processMultipleUsers()
         spawn(function()
             if instantTeleportToPlayer(targetPlayer) then
                 wait(0.1)
+                
+                spinAroundPlayer(targetPlayer, 2.5)
                 
                 local selectedMessages = getRandomMessages()
                 for i, message in ipairs(selectedMessages) do
