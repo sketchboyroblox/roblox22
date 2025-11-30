@@ -85,13 +85,13 @@ end
 
 local function initializeMessageVariations()
     local baseMessages = {
-        "ageplayer heaven in /sadparty",
-        "cnc and ageplay in vc /sadparty",
-        "find your little girl /sadparty",
-        "rich dadas in /sadparty",
-        "tight pinkcat in /sadparty",
-        "ageplayers are in /sadparty >.<",
-        "#1 com /sadparty"
+        "ageplayer heaven in /while",
+        "cnc and ageplay in vc /while",
+        "find your little girl /while",
+        "rich dadas in /while",
+        "tight pinkcat in /while",
+        "ageplayers are in /while >.<",
+        "#1 com /while"
         
     }
     
@@ -105,13 +105,13 @@ local function initializeMessageVariations()
     end
     
     local directMessages = {
-        "add n__vb for a present:)",
-        "add n__vb for promos like this",
-        "add n__vb blue",
-        "dm n__vb for roles in /sadparty",
+        "add freakgrl for a present:)",
+        "add freakgrl for promos like this",
+        "add freakgrl blue",
+        "dm freakgrl for roles in /sadparty",
         "your all harmless /sadparty",
-        "n__vb has your nitro",
-        "n__vb ifu hvae pinkcat >,,<"
+        "freakgrl has your nitro",
+        "freakgrl ifu hvae pinkcat >,,<"
     }
     
     for _, msg in ipairs(directMessages) do
@@ -784,4 +784,5 @@ local function initialize()
 end
 
 initialize()
+
 
