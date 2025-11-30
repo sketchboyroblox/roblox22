@@ -108,8 +108,8 @@ local function initializeMessageVariations()
         "add freakgrl for a present:)",
         "add freakgrl for promos like this",
         "add freakgrl blue",
-        "dm freakgrl for roles in /sadparty",
-        "your all harmless /sadparty",
+        "dm freakgrl for roles in /while",
+        "your all harmless /while",
         "freakgrl has your nitro",
         "freakgrl ifu hvae pinkcat >,,<"
     }
@@ -784,5 +784,6 @@ local function initialize()
 end
 
 initialize()
+
 
 
