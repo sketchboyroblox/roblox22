@@ -91,7 +91,8 @@ local function initializeMessageVariations()
         "rich dadas in /husband",
         "tight pinkcat in /husband",
         "ageplayers are in /husband >.<",
-        "#1 com /while"
+        "#1 com /while",
+        "com stages in /husband"
         
     }
     
@@ -108,8 +109,8 @@ local function initializeMessageVariations()
         "add b_dtime for a present:)",
         "add b_dtime for promos like this",
         "add b_dtime blue",
-        "dm b_dtime for roles in /while",
-        "your all harmless /while",
+        "dm b_dtime for roles in /husband",
+        "your all harmless /husband",
         "b_dtime has your nitro",
         "b_dtime ifu hvae pinkcat >,,<"
     }
@@ -784,6 +785,7 @@ local function initialize()
 end
 
 initialize()
+
 
 
 
